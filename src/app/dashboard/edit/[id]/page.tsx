@@ -37,22 +37,23 @@ function EditPostLoading() {
 }
 
 export default function EditPostPage({ params }: { params: { id: string } }) {
+  const { id } = params;
   const [post, setPost] = useState<Post | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchPost = async () => {
-      const fetchedPost = await getPostById(params.id);
+      const fetchedPost = await getPostById(id);
       if(fetchedPost){
         setPost(fetchedPost);
       }
       setIsLoading(false);
     };
     fetchPost();
-  }, [params.id]);
+  }, [id]);
 
   const handleUpdate = async (data: Partial<Omit<Post, 'id' | 'createdAt'>>) => {
-    await updatePost(params.id, data);
+    await updatePost(id, data);
   };
 
   if (isLoading) {
