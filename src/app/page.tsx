@@ -1,11 +1,17 @@
-import { getPosts } from '@/lib/posts';
+import { getPaginatedPosts } from '@/lib/posts';
 import type { Post } from '@/lib/definitions';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
-export default async function Home() {
-  const posts = await getPosts();
+export default async function Home({ searchParams }: { searchParams?: { page?: string } }) {
+  const currentPage = Number(searchParams?.page) || 1;
+  const { posts, totalPages } = await getPaginatedPosts({ page: currentPage, limit: 5 });
+
+  const hasPreviousPage = currentPage > 1;
+  const hasNextPage = currentPage < totalPages;
 
   return (
     <div className="space-y-12">
@@ -48,6 +54,24 @@ export default async function Home() {
             </Card>
           </Link>
         ))}
+      </div>
+
+      <div className="flex justify-between items-center mt-12">
+        <Button asChild variant="outline" disabled={!hasPreviousPage}>
+          <Link href={hasPreviousPage ? `/?page=${currentPage - 1}` : '#'}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Previous
+          </Link>
+        </Button>
+        <span className="text-muted-foreground">
+          Page {currentPage} of {totalPages}
+        </span>
+        <Button asChild variant="outline" disabled={!hasNextPage}>
+          <Link href={hasNextPage ? `/?page=${currentPage + 1}` : '#'}>
+            Next
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
+        </Button>
       </div>
     </div>
   );

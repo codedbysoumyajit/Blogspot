@@ -25,12 +25,49 @@ let posts: Post[] = [
     image: 'https://picsum.photos/1200/800?random=3',
     createdAt: new Date('2023-11-01T15:00:00Z').toISOString(),
   },
+  {
+    id: '4',
+    title: 'State Management in React: A 2024 Perspective',
+    description: 'An overview of modern state management solutions in React, from Context API to Zustand and Jotai.',
+    content: 'State management in React has evolved significantly. While Redux was once the default choice, modern React offers a variety of solutions. The built-in Context API is great for simple state that needs to be shared across a few components. For more complex global state, libraries like Zustand and Jotai offer a simpler API and better performance than traditional Redux, leveraging a more atomic, hook-based approach.',
+    image: 'https://picsum.photos/1200/800?random=4',
+    createdAt: new Date('2024-01-10T10:00:00Z').toISOString(),
+  },
+  {
+    id: '5',
+    title: 'The Rise of Tailwind CSS',
+    description: 'How utility-first CSS is changing the way we build interfaces, and why it might be right for your next project.',
+    content: 'Tailwind CSS has taken the frontend world by storm. Its utility-first approach allows for rapid prototyping and building custom designs without writing a single line of custom CSS. This can lead to more maintainable and scalable styling, as styles are co-located with the markup. While it has a learning curve, the productivity gains are often worth it.',
+    image: 'https://picsum.photos/1200/800?random=5',
+    createdAt: new Date('2024-02-20T11:00:00Z').toISOString(),
+  },
+  {
+    id: '6',
+    title: 'Deno vs. Node.js: A New Era for JavaScript Runtimes?',
+    description: 'A comparison of Deno and Node.js, exploring their differences, strengths, and weaknesses.',
+    content: 'Deno, created by the original author of Node.js, aims to fix many of the design issues of its predecessor. It has built-in support for TypeScript, a secure-by-default runtime, and a single executable. While Node.js has a massive ecosystem, Deno\'s modern approach is gaining traction for new projects.',
+    image: 'https://picsum.photos/1200/800?random=6',
+    createdAt: new Date('2024-03-15T14:00:00Z').toISOString(),
+  }
 ];
 
 export const getPosts = async (): Promise<Post[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve([...posts].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+    }, 500);
+  });
+};
+
+export const getPaginatedPosts = async ({ page, limit }: { page: number, limit: number }): Promise<{ posts: Post[], totalPages: number }> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const sortedPosts = [...posts].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+      const paginatedPosts = sortedPosts.slice(startIndex, endIndex);
+      const totalPages = Math.ceil(sortedPosts.length / limit);
+      resolve({ posts: paginatedPosts, totalPages });
     }, 500);
   });
 };
