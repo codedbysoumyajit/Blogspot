@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default async function PostPage({ params }: { params: { id: string } }) {
   const post = await getPostById(params.id);
@@ -47,12 +49,10 @@ export default async function PostPage({ params }: { params: { id: string } }) {
         />
       </div>
 
-      <div className="text-lg leading-relaxed space-y-6 text-foreground/90">
-        {post.content.split('\\n\\n').map((paragraph, index) => (
-          <p key={index}>
-            {paragraph}
-          </p>
-        ))}
+      <div className="prose dark:prose-invert lg:prose-lg max-w-none mx-auto text-foreground/90">
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {post.content}
+        </ReactMarkdown>
       </div>
     </article>
   );
