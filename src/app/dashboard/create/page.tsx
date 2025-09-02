@@ -5,7 +5,7 @@ import { createPost } from '@/lib/posts';
 import type { Post } from '@/lib/definitions';
 
 export default function CreatePostPage() {
-  const handleCreate = async (data: Omit<Post, 'id' | 'createdAt'>) => {
+  const handleCreate = async (data: Omit<Post, 'id' | 'createdAt' | '_id'>) => {
     await createPost(data);
   };
 

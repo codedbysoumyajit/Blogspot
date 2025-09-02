@@ -57,7 +57,7 @@ export default function EditPostPage() {
     fetchPost();
   }, [id]);
 
-  const handleUpdate = async (data: Partial<Omit<Post, 'id' | 'createdAt'>>) => {
+  const handleUpdate = async (data: Partial<Omit<Post, 'id' | 'createdAt' | '_id'>>) => {
     if (!id) return;
     await updatePost(id, data);
   };

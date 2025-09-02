@@ -12,7 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Save } from 'lucide-react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const formSchema = z.object({
   title: z.string().min(1, { message: 'Title is required.' }),
@@ -33,6 +33,11 @@ export default function PostForm({ post, onSave, formType }: PostFormProps) {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [randomImage, setRandomImage] = useState('');
+
+  useEffect(() => {
+    setRandomImage(`https://picsum.photos/1200/800?random=${Math.floor(Math.random() * 100)}`)
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -41,10 +46,20 @@ export default function PostForm({ post, onSave, formType }: PostFormProps) {
       description: post?.description || '',
       author: post?.author || '',
       location: post?.location || '',
-      image: post?.image || `https://picsum.photos/1200/800?random=${Math.floor(Math.random() * 100)}`,
+      image: post?.image || '',
       content: post?.content || '',
     },
   });
+
+  // Set image value separately to deal with hydration
+  useEffect(() => {
+    if (formType === 'Create' && randomImage) {
+      form.setValue('image', randomImage);
+    }
+    if (formType === 'Edit' && post?.image) {
+      form.setValue('image', post.image);
+    }
+  }, [randomImage, post, formType, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
