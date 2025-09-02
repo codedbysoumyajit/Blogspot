@@ -11,8 +11,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Save } from 'lucide-react';
+import { Save, Sparkles, Loader2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { generatePostContent, GeneratePostContentOutput } from '@/ai/flows/generatePostContent';
+
 
 const formSchema = z.object({
   title: z.string().min(1, { message: 'Title is required.' }),
@@ -29,10 +40,68 @@ type PostFormProps = {
   formType: 'Create' | 'Edit';
 };
 
+function AIGenerationDialog({ onGenerate, isGenerating }: { onGenerate: (topic: string) => void, isGenerating: boolean }) {
+    const [topic, setTopic] = useState('');
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleGenerate = () => {
+        if (topic) {
+            onGenerate(topic);
+        }
+    }
+
+    return (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+                <Button type="button" variant="outline" size="sm">
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Generate with AI
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Generate Post Content</DialogTitle>
+                    <DialogDescription>
+                        Enter a topic, and AI will generate a title, description, and content for your post.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="topic" className="text-right">
+                            Topic
+                        </Label>
+                        <Input
+                            id="topic"
+                            value={topic}
+                            onChange={(e) => setTopic(e.target.value)}
+                            className="col-span-3"
+                            placeholder="e.g. 'The future of web development'"
+                        />
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>Cancel</Button>
+                    <Button type="button" onClick={handleGenerate} disabled={isGenerating || !topic}>
+                        {isGenerating ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Generating...
+                            </>
+                        ) : (
+                            'Generate'
+                        )}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 export default function PostForm({ post, onSave, formType }: PostFormProps) {
   const router = useRouter();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [isGenerating, setIsGenerating] = React.useState(false);
   const [randomImage, setRandomImage] = useState('');
 
   useEffect(() => {
@@ -82,13 +151,41 @@ export default function PostForm({ post, onSave, formType }: PostFormProps) {
     }
   }
 
+  const handleAIGenerate = async (topic: string) => {
+    setIsGenerating(true);
+    try {
+        const result: GeneratePostContentOutput = await generatePostContent({ topic });
+        form.setValue('title', result.title);
+        form.setValue('description', result.description);
+        form.setValue('content', result.content);
+        toast({
+            title: "Content Generated",
+            description: "The AI has successfully generated the post content.",
+        });
+    } catch (error) {
+        console.error("AI Generation Error: ", error);
+        toast({
+            title: 'AI Generation Failed',
+            description: 'There was an error generating content. Please try again.',
+            variant: 'destructive',
+        });
+    } finally {
+        setIsGenerating(false);
+    }
+  }
+
   return (
     <Card className="shadow-lg">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
             <CardHeader>
-                <CardTitle>{formType} Post</CardTitle>
-                <CardDescription>Fill in the details for your blog post. Click save when you're done.</CardDescription>
+                <div className="flex justify-between items-center">
+                    <div>
+                        <CardTitle>{formType} Post</CardTitle>
+                        <CardDescription>Fill in the details for your blog post. Click save when you're done.</CardDescription>
+                    </div>
+                    <AIGenerationDialog onGenerate={handleAIGenerate} isGenerating={isGenerating} />
+                </div>
             </CardHeader>
             <CardContent className="space-y-6">
                 <FormField
