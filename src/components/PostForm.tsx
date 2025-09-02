@@ -22,6 +22,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import { generatePostContent, GeneratePostContentOutput } from '@/ai/flows/generatePostContent';
 
 
@@ -47,6 +48,7 @@ function AIGenerationDialog({ onGenerate, isGenerating }: { onGenerate: (topic: 
     const handleGenerate = () => {
         if (topic) {
             onGenerate(topic);
+            setIsOpen(false);
         }
     }
 
