@@ -49,7 +49,9 @@ export default function EditPostPage({ params }: { params: { id: string } }) {
       }
       setIsLoading(false);
     };
-    fetchPost();
+    if (id) {
+        fetchPost();
+    }
   }, [id]);
 
   const handleUpdate = async (data: Partial<Omit<Post, 'id' | 'createdAt'>>) => {
