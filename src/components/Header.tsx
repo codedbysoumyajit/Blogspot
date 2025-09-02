@@ -15,7 +15,7 @@ export default function Header() {
         </Link>
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Button asChild variant="outline">
+          <Button asChild variant="outline" size="sm">
             <Link href="/login">
               <UserCircle className="mr-2 h-4 w-4" />
               Admin Login
