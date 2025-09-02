@@ -10,4 +10,5 @@ export interface Post {
   createdAt: string;
   author: string;
   location: string;
+  likes: number;
 }

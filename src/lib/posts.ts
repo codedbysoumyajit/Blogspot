@@ -51,10 +51,11 @@ export const getPostById = async (id: string): Promise<Post | undefined> => {
     return mapPost(post);
 };
 
-export const createPost = async (data: Omit<Post, 'id' | 'createdAt' | '_id'>): Promise<Post> => {
+export const createPost = async (data: Omit<Post, 'id' | 'createdAt' | '_id' | 'likes'>): Promise<Post> => {
     const collection = await getCollection();
     const newPost = {
         ...data,
+        likes: 0,
         createdAt: new Date().toISOString(),
     };
     const result = await collection.insertOne(newPost);
@@ -91,3 +92,19 @@ export const deletePost = async (id: string): Promise<void> => {
     const collection = await getCollection();
     await collection.deleteOne({ _id: new ObjectId(id) });
 };
+
+export const likePost = async (id: string): Promise<Post | undefined> => {
+    if (!ObjectId.isValid(id)) {
+        return undefined;
+    }
+    const collection = await getCollection();
+    const result = await collection.findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $inc: { likes: 1 } },
+        { returnDocument: 'after' }
+    );
+    if (!result) {
+        return undefined;
+    }
+    return mapPost(result);
+}

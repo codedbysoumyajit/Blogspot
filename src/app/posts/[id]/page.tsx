@@ -1,10 +1,10 @@
 'use client';
 
-import { getPostById } from '@/lib/posts';
+import { getPostById, likePost } from '@/lib/posts';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound, useParams } from 'next/navigation';
-import { ArrowLeft, User, MapPin, Sparkles, Loader2, Info } from 'lucide-react';
+import { ArrowLeft, User, MapPin, Sparkles, Loader2, Info, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -53,6 +53,8 @@ export default function PostPage() {
   const [isSummarizing, setIsSummarizing] = useState(false);
   const [summary, setSummary] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [likes, setLikes] = useState(0);
+  const [hasLiked, setHasLiked] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -60,6 +62,10 @@ export default function PostPage() {
         .then(fetchedPost => {
           if (fetchedPost) {
             setPost(fetchedPost);
+            setLikes(fetchedPost.likes || 0);
+            if (localStorage.getItem(`liked-post-${id}`)) {
+                setHasLiked(true);
+            }
           } else {
             setError('Post not found.');
           }
@@ -81,6 +87,16 @@ export default function PostPage() {
       setSummary('Sorry, I was unable to generate a summary for this post.');
     } finally {
       setIsSummarizing(false);
+    }
+  };
+
+  const handleLike = async () => {
+    if (!id || hasLiked) return;
+    const updatedPost = await likePost(id);
+    if(updatedPost) {
+        setLikes(updatedPost.likes);
+        setHasLiked(true);
+        localStorage.setItem(`liked-post-${id}`, 'true');
     }
   };
 
@@ -148,7 +164,7 @@ export default function PostPage() {
         />
       </div>
       
-      <div className="mb-8 space-y-4">
+      <div className="mb-8 flex items-center space-x-4">
         <Button onClick={handleSummarize} disabled={isSummarizing} variant="outline">
           {isSummarizing ? (
             <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Summarizing...</>
@@ -156,17 +172,22 @@ export default function PostPage() {
             <><Sparkles className="mr-2 h-4 w-4" /> Summarize with AI</>
           )}
         </Button>
+        <Button onClick={handleLike} disabled={hasLiked} variant="outline" className="flex items-center gap-2">
+            <Heart className={`h-4 w-4 ${hasLiked ? 'fill-red-500 text-red-500' : ''}`} />
+            <span>{likes}</span>
+        </Button>
 
-        {summary && (
-          <Alert>
+      </div>
+
+      {summary && (
+        <Alert className="mb-8">
             <Info className="h-4 w-4" />
             <AlertTitle>AI Summary</AlertTitle>
             <AlertDescription>
-              {summary}
+            {summary}
             </AlertDescription>
-          </Alert>
+        </Alert>
         )}
-      </div>
 
       <div className="prose dark:prose-invert lg:prose-lg max-w-none mx-auto text-foreground/90">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>
