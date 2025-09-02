@@ -10,8 +10,18 @@ async function getCollection() {
 }
 
 function mapPost(post: any): Post {
-  const { _id, ...rest } = post;
-  return { ...rest, id: _id.toHexString() };
+  // Explicitly create a new object to prevent passing complex MongoDB types
+  return {
+    id: post._id.toHexString(),
+    title: post.title,
+    description: post.description,
+    content: post.content,
+    image: post.image,
+    createdAt: post.createdAt,
+    author: post.author,
+    location: post.location,
+    _id: post._id, // This will be correctly typed as ObjectId on the server
+  };
 }
 
 export const getPosts = async (): Promise<Post[]> => {
@@ -55,7 +65,14 @@ export const createPost = async (data: Omit<Post, 'id' | 'createdAt' | '_id'>): 
         createdAt: new Date().toISOString(),
     };
     const result = await collection.insertOne(newPost);
-    return { ...newPost, id: result.insertedId.toHexString() };
+    const insertedId = result.insertedId;
+
+    const createdPost = {
+      ...newPost,
+      _id: insertedId,
+      id: insertedId.toHexString()
+    };
+    return createdPost;
 };
 
 export const updatePost = async (id: string, data: Partial<Omit<Post, 'id' | 'createdAt' | '_id'>>): Promise<Post | undefined> => {
