@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
 import PostForm from '@/components/PostForm';
 import { getPostById, updatePost } from '@/lib/posts';
 import type { Post } from '@/lib/definitions';
@@ -36,8 +37,9 @@ function EditPostLoading() {
     );
 }
 
-export default function EditPostPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default function EditPostPage() {
+  const params = useParams();
+  const id = Array.isArray(params.id) ? params.id[0] : params.id;
   const [post, setPost] = useState<Post | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
