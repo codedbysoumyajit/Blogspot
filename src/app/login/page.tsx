@@ -13,28 +13,22 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { LogIn } from 'lucide-react';
-import React, { useState } from 'react';
+import React from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { login } from './actions';
 
 export default function LoginPage() {
-  const router = useRouter();
   const { toast } = useToast();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
-  // These env vars are only available on the server,
-  // but this is a server component so it's fine.
-  const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
-  const adminPassword = process.env.ADMIN_PASSWORD || 'password';
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const result = await login(formData);
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email === adminEmail && password === adminPassword) {
-      router.push('/dashboard');
-    } else {
+    if (result?.error) {
       toast({
         title: 'Login Failed',
-        description: 'Please check your email and password.',
+        description: result.errorDescription,
         variant: 'destructive',
       });
     }
@@ -57,21 +51,19 @@ export default function LoginPage() {
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
+                name="email"
                 type="email"
                 placeholder="admin@example.com"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
+                name="password"
                 type="password"
                 required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
           </CardContent>
