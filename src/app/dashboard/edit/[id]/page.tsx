@@ -48,8 +48,7 @@ export default function EditPostPage() {
       if (id) {
         const fetchedPost = await getPostById(id);
         if(fetchedPost){
-          const { _id, ...plainPost } = fetchedPost;
-          setPost(plainPost as Post);
+          setPost(fetchedPost);
         }
       }
       setIsLoading(false);
