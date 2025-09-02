@@ -37,7 +37,7 @@ function EditPostLoading() {
 }
 
 export default function EditPostPage({ params }: { params: { id: string } }) {
-  const id = params.id;
+  const { id } = params;
   const [post, setPost] = useState<Post | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
