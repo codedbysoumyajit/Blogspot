@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Button } from './ui/button';
 import { Code, UserCircle } from 'lucide-react';
+import { ThemeToggle } from './ThemeToggle';
 
 export default function Header() {
   return (
@@ -12,14 +13,15 @@ export default function Header() {
           </Button>
           <span className="text-xl font-bold text-foreground font-headline">DevSpace</span>
         </Link>
-        <nav>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
           <Button asChild variant="outline">
             <Link href="/login">
               <UserCircle className="mr-2 h-4 w-4" />
               Admin Login
             </Link>
           </Button>
-        </nav>
+        </div>
       </div>
     </header>
   );
