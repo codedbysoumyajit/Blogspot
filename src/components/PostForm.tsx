@@ -17,6 +17,8 @@ import React from 'react';
 const formSchema = z.object({
   title: z.string().min(1, { message: 'Title is required.' }),
   description: z.string().min(1, { message: 'Description is required.' }),
+  author: z.string().min(1, { message: 'Author is required.' }),
+  location: z.string().min(1, { message: 'Location is required.' }),
   image: z.string().url({ message: 'Please enter a valid URL.' }),
   content: z.string().min(1, { message: 'Content is required.' }),
 });
@@ -37,6 +39,8 @@ export default function PostForm({ post, onSave, formType }: PostFormProps) {
     defaultValues: {
       title: post?.title || '',
       description: post?.description || '',
+      author: post?.author || '',
+      location: post?.location || '',
       image: post?.image || `https://picsum.photos/1200/800?random=${Math.floor(Math.random() * 100)}`,
       content: post?.content || '',
     },
@@ -98,6 +102,34 @@ export default function PostForm({ post, onSave, formType }: PostFormProps) {
                     </FormItem>
                 )}
                 />
+                 <div className="grid md:grid-cols-2 gap-6">
+                    <FormField
+                    control={form.control}
+                    name="author"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Author</FormLabel>
+                        <FormControl>
+                            <Input placeholder="Author's Name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                    <FormField
+                    control={form.control}
+                    name="location"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Location</FormLabel>
+                        <FormControl>
+                            <Input placeholder="City, Country" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                </div>
                 <FormField
                 control={form.control}
                 name="image"

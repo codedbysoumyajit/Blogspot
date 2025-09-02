@@ -2,7 +2,7 @@ import { getPostById } from '@/lib/posts';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, User, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -29,13 +29,23 @@ export default async function PostPage({ params }: { params: { id: string } }) {
         {post.title}
       </h1>
       
-      <p className="text-lg text-muted-foreground mb-8">
-        Published on {new Date(post.createdAt).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        })}
-      </p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:gap-6 text-muted-foreground mb-8">
+        <div className="flex items-center gap-2">
+          <User className="h-4 w-4" />
+          <span>{post.author}</span>
+        </div>
+        <div className="flex items-center gap-2 mt-2 sm:mt-0">
+          <MapPin className="h-4 w-4" />
+          <span>{post.location}</span>
+        </div>
+        <p className="mt-2 sm:mt-0 sm:ml-auto">
+          Published on {new Date(post.createdAt).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}
+        </p>
+      </div>
 
       <div className="relative h-64 md:h-96 w-full rounded-lg overflow-hidden mb-12 shadow-lg">
         <Image
