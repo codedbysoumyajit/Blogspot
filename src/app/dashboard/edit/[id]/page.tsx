@@ -43,15 +43,16 @@ export default function EditPostPage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     const fetchPost = async () => {
-      const fetchedPost = await getPostById(id);
-      if(fetchedPost){
-        setPost(fetchedPost);
+      if (id) {
+        const fetchedPost = await getPostById(id);
+        if(fetchedPost){
+          setPost(fetchedPost);
+        }
       }
       setIsLoading(false);
     };
-    if (id) {
-        fetchPost();
-    }
+    
+    fetchPost();
   }, [id]);
 
   const handleUpdate = async (data: Partial<Omit<Post, 'id' | 'createdAt'>>) => {
