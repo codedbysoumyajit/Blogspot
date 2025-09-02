@@ -8,6 +8,7 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 export const metadata: Metadata = {
   title: 'DevSpace',
   description: 'A personal developer blog.',
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
@@ -21,6 +22,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+        <meta name="theme-color" content="#ffffff" />
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen">
         <ThemeProvider
