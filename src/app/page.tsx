@@ -17,7 +17,7 @@ export default async function Home({ searchParams }: { searchParams?: { page?: s
     <div className="space-y-12">
       <div className="text-center">
         <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl font-headline">
-          Welcome to DevSpace
+          Welcome to Soumyajit's Blogspot
         </h1>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
           Thoughts, stories, and ideas from my developer journey.

@@ -11,7 +11,7 @@ export default function Header() {
           <Button variant="ghost" size="icon" className="text-primary hover:bg-accent">
             <Code className="h-6 w-6" />
           </Button>
-          <span className="text-xl font-bold text-foreground font-headline">DevSpace</span>
+          <span className="text-xl font-bold text-foreground font-headline">Soumyajit's Blogspot</span>
         </Link>
         <div className="flex items-center gap-2">
           <ThemeToggle />

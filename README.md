@@ -1,8 +1,8 @@
-# 🚀 DevSpace - Your Personal AI-Powered Blog
+# 🚀 Soumyajit's Blogspot - Your Personal AI-Powered Blog
 
-Welcome to DevSpace, a modern, full-featured blogging platform built with Next.js and supercharged with generative AI capabilities. This project provides a personal space to share thoughts, stories, and ideas, all managed through a clean and intuitive dashboard.
+Welcome to Soumyajit's Blogspot, a modern, full-featured blogging platform built with Next.js and supercharged with generative AI capabilities. This project provides a personal space to share thoughts, stories, and ideas, all managed through a clean and intuitive dashboard.
 
-![DevSpace Homepage](https://placehold.co/800x400?text=DevSpace+App+Screenshot)
+![Soumyajit's Blogspot Homepage](https://placehold.co/800x400?text=Soumyajit's+Blogspot+App+Screenshot)
 
 ## ✨ Features
 

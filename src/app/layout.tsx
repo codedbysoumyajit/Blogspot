@@ -6,7 +6,7 @@ import Footer from '@/components/Footer';
 import { ThemeProvider } from '@/components/ThemeProvider';
 
 export const metadata: Metadata = {
-  title: 'DevSpace',
+  title: "Soumyajit's Blogspot",
   description: 'A personal developer blog.',
   manifest: '/manifest.json',
 };
