@@ -8,11 +8,11 @@ export async function GET() {
       return NextResponse.json({ message: 'No posts found' }, { status: 404 });
     }
     
-    const latestPost = posts[0];
+    const latestPosts = posts.slice(0, 3);
     
-    return NextResponse.json(latestPost);
+    return NextResponse.json(latestPosts);
   } catch (error) {
-    console.error('Failed to get latest post:', error);
+    console.error('Failed to get latest posts:', error);
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
   }
 }
