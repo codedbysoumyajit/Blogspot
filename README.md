@@ -16,6 +16,43 @@ Welcome to Soumyajit's Blogspot, a modern, full-featured blogging platform built
 - **🌗 Dark Mode:** A beautiful dark theme for comfortable reading at night.
 - **Pagination:** Easily navigate through a large number of posts.
 
+## 🔌 API Endpoints
+
+This blog also provides a simple API to fetch the latest content.
+
+### Get Latest Posts
+
+-   **Endpoint:** `GET /api/latest-post`
+-   **Description:** Fetches the three most recent blog posts.
+-   **Success Response (`200 OK`):**
+
+    ```json
+    [
+      {
+        "id": "66a3b4c5d6e7f8g9h0i1j2k3",
+        "title": "My Latest Adventure",
+        "description": "A summary of my most recent trip...",
+        "content": "The full markdown content of the post...",
+        "image": "https://example.com/image.jpg",
+        "createdAt": "2025-07-26T10:00:00.000Z",
+        "author": "Soumyajit",
+        "location": "Kolkata, India",
+        "likes": 42
+      },
+      { ... },
+      { ... }
+    ]
+    ```
+
+-   **Error Response (`404 Not Found`):**
+    Returned if no posts are found in the database.
+
+    ```json
+    {
+      "message": "No posts found"
+    }
+    ```
+
 ## 🛠️ Tech Stack
 
 - **Framework:** [Next.js](https://nextjs.org/) (App Router)
