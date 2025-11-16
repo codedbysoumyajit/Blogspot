@@ -37,7 +37,8 @@ This blog also provides a simple API to fetch the latest content.
         "createdAt": "2025-07-26T10:00:00.000Z",
         "author": "Soumyajit",
         "location": "Kolkata, India",
-        "likes": 42
+        "likes": 42,
+        "url": "http://localhost:9002/posts/66a3b4c5d6e7f8g9h0i1j2k3"
       },
       { ... },
       { ... }

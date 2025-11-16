@@ -1,7 +1,8 @@
 import { getPosts } from '@/lib/posts';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import type { Post } from '@/lib/definitions';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const posts = await getPosts();
     if (posts.length === 0) {
@@ -10,7 +11,16 @@ export async function GET() {
     
     const latestPosts = posts.slice(0, 3);
     
-    return NextResponse.json(latestPosts);
+    const protocol = request.headers.get('x-forwarded-proto') || 'http';
+    const host = request.headers.get('host');
+    const baseUrl = `${protocol}://${host}`;
+
+    const postsWithUrl = latestPosts.map((post: Post) => ({
+      ...post,
+      url: `${baseUrl}/posts/${post.id}`,
+    }));
+    
+    return NextResponse.json(postsWithUrl);
   } catch (error) {
     console.error('Failed to get latest posts:', error);
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
